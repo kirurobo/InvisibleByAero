@@ -97,8 +97,8 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(456, 61);
             this.label2.TabIndex = 4;
-            this.label2.Text = "注意\r\n・透明化時、そのウィンドウは操作を受け付けなくします。\r\n・不透明化を押しても完全には戻らない場合もあります。\r\n　その場合は対象のアプリケーションを再起" +
-    "動してください。";
+            this.label2.Text = "注意\r\n・透明化しても見えないだけでウィンドウは存在します。\r\n・不透明化を押しても完全には戻らない場合もあります。\r\n　その場合は対象のアプリケーションを再起動" +
+    "してください。";
             // 
             // MainForm
             // 
