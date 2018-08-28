@@ -149,8 +149,8 @@ namespace InvisibleByAero
             SetWindowLong(hWnd, GWL_STYLE, ws);
 
             // 常に最前面にし、操作は受け付けないようにする
-            wsex &= ~WS_EX_OVERLAPPEDWINDOW;
-            wsex |= WS_EX_TRANSPARENT;
+            //wsex &= ~WS_EX_OVERLAPPEDWINDOW;
+            wsex = WS_EX_TRANSPARENT;
             wsex |= WS_EX_LAYERED;
             wsex |= WS_EX_TOPMOST;
             SetWindowLong(hWnd, GWL_EXSTYLE, wsex);
