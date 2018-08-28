@@ -148,14 +148,15 @@ namespace InvisibleByAero
             ws &= ~WS_OVERLAPPEDWINDOW;
             SetWindowLong(hWnd, GWL_STYLE, ws);
 
-            // 常に最前面にし、操作は受け付けないようにする
-            //wsex &= ~WS_EX_OVERLAPPEDWINDOW;
-            wsex = WS_EX_TRANSPARENT;
-            wsex |= WS_EX_LAYERED;
-            wsex |= WS_EX_TOPMOST;
-            SetWindowLong(hWnd, GWL_EXSTYLE, wsex);
+            //// 常に最前面にし、操作は受け付けないようにする
+            ////wsex &= ~WS_EX_OVERLAPPEDWINDOW;
+            //wsex = WS_EX_TRANSPARENT;
+            //wsex |= WS_EX_LAYERED;
+            //wsex |= WS_EX_TOPMOST;
+            //SetWindowLong(hWnd, GWL_EXSTYLE, wsex);
+            //SetWindowPos(hWnd, new IntPtr(-1), 0, 0, 0, 0, SWP_REFRESH);
 
-            SetWindowPos(hWnd, new IntPtr(-1), 0, 0, 0, 0, SWP_REFRESH);
+            SetWindowPos(hWnd, IntPtr.Zero, 0, 0, 0, 0, SWP_REFRESH);
         }
 
         /// <summary>
@@ -191,19 +192,19 @@ namespace InvisibleByAero
             }
             SetWindowLong(hWnd, GWL_STYLE, ws);
 
-            // 操作の透過と常に最前面を解除
-            if (originalExStyles.ContainsKey(hWnd))
-            {
-                wsex = originalExStyles[hWnd];
-            }
-            else
-            {
-                wsex = GetWindowLong(hWnd, GWL_EXSTYLE);
-                wsex &= ~WS_EX_TRANSPARENT;
-                wsex &= ~WS_EX_LAYERED;
-                wsex &= ~WS_EX_TOPMOST;
-            }
-            SetWindowLong(hWnd, GWL_EXSTYLE, wsex);
+            //// 操作の透過と常に最前面を解除
+            //if (originalExStyles.ContainsKey(hWnd))
+            //{
+            //    wsex = originalExStyles[hWnd];
+            //}
+            //else
+            //{
+            //    wsex = GetWindowLong(hWnd, GWL_EXSTYLE);
+            //    wsex &= ~WS_EX_TRANSPARENT;
+            //    wsex &= ~WS_EX_LAYERED;
+            //    wsex &= ~WS_EX_TOPMOST;
+            //}
+            //SetWindowLong(hWnd, GWL_EXSTYLE, wsex);
 
             SetWindowPos(hWnd, IntPtr.Zero, 0, 0, 0, 0, SWP_REFRESH);
         }
