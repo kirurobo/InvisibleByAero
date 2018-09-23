@@ -36,6 +36,9 @@
             this.checkBoxTransparent = new System.Windows.Forms.CheckBox();
             this.checkBoxTopmost = new System.Windows.Forms.CheckBox();
             this.checkBoxClickThrough = new System.Windows.Forms.CheckBox();
+            this.checkBoxColorKey = new System.Windows.Forms.CheckBox();
+            this.colorDialogForTransparent = new System.Windows.Forms.ColorDialog();
+            this.buttonKeyColor = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // comboBoxWindowClass
@@ -63,7 +66,7 @@
             // 
             this.buttonNoAeroBorder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNoAeroBorder.Location = new System.Drawing.Point(12, 90);
+            this.buttonNoAeroBorder.Location = new System.Drawing.Point(12, 106);
             this.buttonNoAeroBorder.Name = "buttonNoAeroBorder";
             this.buttonNoAeroBorder.Size = new System.Drawing.Size(291, 40);
             this.buttonNoAeroBorder.TabIndex = 2;
@@ -95,11 +98,11 @@
             // checkBoxTransparent
             // 
             this.checkBoxTransparent.AutoSize = true;
-            this.checkBoxTransparent.Location = new System.Drawing.Point(15, 48);
+            this.checkBoxTransparent.Location = new System.Drawing.Point(12, 48);
             this.checkBoxTransparent.Name = "checkBoxTransparent";
-            this.checkBoxTransparent.Size = new System.Drawing.Size(60, 16);
+            this.checkBoxTransparent.Size = new System.Drawing.Size(101, 16);
             this.checkBoxTransparent.TabIndex = 5;
-            this.checkBoxTransparent.Text = "透明化";
+            this.checkBoxTransparent.Text = "DWMによる透過";
             this.checkBoxTransparent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBoxTransparent.UseVisualStyleBackColor = true;
             this.checkBoxTransparent.Click += new System.EventHandler(this.checkBoxTransparent_Click);
@@ -107,7 +110,7 @@
             // checkBoxTopmost
             // 
             this.checkBoxTopmost.AutoSize = true;
-            this.checkBoxTopmost.Location = new System.Drawing.Point(91, 48);
+            this.checkBoxTopmost.Location = new System.Drawing.Point(243, 47);
             this.checkBoxTopmost.Name = "checkBoxTopmost";
             this.checkBoxTopmost.Size = new System.Drawing.Size(60, 16);
             this.checkBoxTopmost.TabIndex = 5;
@@ -119,7 +122,7 @@
             // checkBoxClickThrough
             // 
             this.checkBoxClickThrough.AutoSize = true;
-            this.checkBoxClickThrough.Location = new System.Drawing.Point(177, 48);
+            this.checkBoxClickThrough.Location = new System.Drawing.Point(12, 69);
             this.checkBoxClickThrough.Name = "checkBoxClickThrough";
             this.checkBoxClickThrough.Size = new System.Drawing.Size(72, 16);
             this.checkBoxClickThrough.TabIndex = 5;
@@ -128,12 +131,40 @@
             this.checkBoxClickThrough.UseVisualStyleBackColor = true;
             this.checkBoxClickThrough.Click += new System.EventHandler(this.checkBoxClickThrough_Click);
             // 
+            // checkBoxColorKey
+            // 
+            this.checkBoxColorKey.AutoSize = true;
+            this.checkBoxColorKey.Location = new System.Drawing.Point(123, 47);
+            this.checkBoxColorKey.Name = "checkBoxColorKey";
+            this.checkBoxColorKey.Size = new System.Drawing.Size(104, 16);
+            this.checkBoxColorKey.TabIndex = 5;
+            this.checkBoxColorKey.Text = "指定色での透過";
+            this.checkBoxColorKey.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBoxColorKey.UseVisualStyleBackColor = true;
+            this.checkBoxColorKey.Click += new System.EventHandler(this.checkBoxColorKey_Click);
+            // 
+            // buttonKeyColor
+            // 
+            this.buttonKeyColor.BackColor = System.Drawing.Color.Black;
+            this.buttonKeyColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonKeyColor.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.buttonKeyColor.ForeColor = System.Drawing.Color.White;
+            this.buttonKeyColor.Location = new System.Drawing.Point(123, 65);
+            this.buttonKeyColor.Name = "buttonKeyColor";
+            this.buttonKeyColor.Size = new System.Drawing.Size(104, 20);
+            this.buttonKeyColor.TabIndex = 6;
+            this.buttonKeyColor.Text = "色選択...";
+            this.buttonKeyColor.UseVisualStyleBackColor = false;
+            this.buttonKeyColor.Click += new System.EventHandler(this.buttonKeyColor_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 199);
+            this.Controls.Add(this.buttonKeyColor);
             this.Controls.Add(this.checkBoxClickThrough);
+            this.Controls.Add(this.checkBoxColorKey);
             this.Controls.Add(this.checkBoxTopmost);
             this.Controls.Add(this.checkBoxTransparent);
             this.Controls.Add(this.label2);
@@ -159,6 +190,9 @@
         private System.Windows.Forms.CheckBox checkBoxTransparent;
         private System.Windows.Forms.CheckBox checkBoxTopmost;
         private System.Windows.Forms.CheckBox checkBoxClickThrough;
+        private System.Windows.Forms.CheckBox checkBoxColorKey;
+        private System.Windows.Forms.ColorDialog colorDialogForTransparent;
+        private System.Windows.Forms.Button buttonKeyColor;
     }
 }
 

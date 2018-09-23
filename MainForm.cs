@@ -21,7 +21,9 @@ namespace InvisibleByAero
 
         private Dictionary<IntPtr, WindowItem> windowList = new Dictionary<IntPtr, WindowItem>();
 
-
+        /// <summary>
+        /// ウィンドウ状態を保持するクラス
+        /// </summary>
         private class WindowItem
         {
             public IntPtr Handle;
@@ -31,6 +33,8 @@ namespace InvisibleByAero
             public long OriginalStyles;     // 元のウィンドウスタイル
             public long OriginalExStyles;   // 元の拡張ウィンドウスタイル
             public bool Transparent;    // 透過中ならtrue
+            public bool ColorKey;        // UpdateLayeredWindowの透過色指定ならtrue
+            public Color KeyColor;      // 透過色指定
             public bool Topmost;        // 最前面中ならtrue
             public bool Clickthrough;   // キー・マウス操作透過中ならtrue
 
@@ -41,8 +45,10 @@ namespace InvisibleByAero
                 this.Text = title;
 
                 this.Transparent = false;
+                this.ColorKey = false;
                 this.Topmost = false;
                 this.Clickthrough = false;
+                this.KeyColor = Color.Black;
 
                 // ウィンドウ状態を読み込み＆記憶
                 long ws = WinApi.GetWindowLong(hWnd, WinApi.GWL_STYLE);
@@ -105,20 +111,26 @@ namespace InvisibleByAero
         private void UpdateUI()
         {
             bool isTransparent = false;
+            bool isColorKey = false;
             bool isTopmost = false;
             bool isClickThrough = false;
+            Color keyColor = Color.Black;
 
             WindowItem item = (WindowItem)comboBoxWindowClass.SelectedItem;
             if (item != null)
             {
                 isTransparent = item.Transparent;
+                isColorKey = item.ColorKey;
                 isTopmost = item.Topmost;
                 isClickThrough = item.Clickthrough;
+                keyColor = item.KeyColor;
             }
 
             checkBoxTransparent.Checked = isTransparent;
+            checkBoxColorKey.Checked = isColorKey;
             checkBoxTopmost.Checked = isTopmost;
             checkBoxClickThrough.Checked = isClickThrough;
+            buttonKeyColor.BackColor = keyColor;
         }
 
         /// <summary>
@@ -132,6 +144,7 @@ namespace InvisibleByAero
             if (item == null) return;
 
             item.Transparent = false;
+            item.ColorKey = false;
             item.Topmost = false;
             item.Clickthrough = false;
 
@@ -146,6 +159,7 @@ namespace InvisibleByAero
         private void UpdateWindow(WindowItem item)
         {
             bool isTransparent = false;
+            bool isColorKey = false;
             bool isTopmost = false;
             bool isClickThrough = false;
 
@@ -160,6 +174,7 @@ namespace InvisibleByAero
             }
 
             isTransparent = item.Transparent;
+            isColorKey = item.ColorKey;
             isTopmost = item.Topmost;
             isClickThrough = item.Clickthrough;
 
@@ -174,7 +189,18 @@ namespace InvisibleByAero
 
                 // 枠無しウィンドウにする
                 ws &= ~WinApi.WS_OVERLAPPEDWINDOW;
-            } else
+            } else if (isColorKey) {
+                // DWMによる透明化範囲をなくす
+                DwmApi.MARGINS margins = new DwmApi.MARGINS(0, 0, 0, 0);
+                DwmApi.DwmExtendFrameIntoClientArea(hWnd, margins);
+
+                // 枠無しウィンドウにする
+                ws &= ~WinApi.WS_OVERLAPPEDWINDOW;
+
+                // レイヤードウィンドウにする
+                wsex |= WinApi.WS_EX_LAYERED;
+            }
+            else
             {
                 // DWMによる透明化範囲をなくす
                 DwmApi.MARGINS margins = new DwmApi.MARGINS(0, 0, 0, 0);
@@ -192,6 +218,15 @@ namespace InvisibleByAero
             WinApi.SetWindowLong(hWnd, WinApi.GWL_EXSTYLE, wsex);
             WinApi.SetWindowLong(hWnd, WinApi.GWL_STYLE, ws);
 
+            if (isColorKey)
+            {
+                WinApi.COLORREF crKey = new WinApi.COLORREF(item.KeyColor.R, item.KeyColor.G, item.KeyColor.B);
+                WinApi.SetLayeredWindowAttributes(hWnd, crKey, 0xFF, WinApi.LWA_COLORKEY);
+            } else
+            {
+                WinApi.SetLayeredWindowAttributes(hWnd, new WinApi.COLORREF(0), 0xFF, WinApi.LWA_ALPHA);
+            }
+
             WinApi.RECT rect;
             WinApi.GetWindowRect(hWnd, out rect);
 
@@ -201,7 +236,7 @@ namespace InvisibleByAero
                 (isTopmost ? WinApi.HWND_TOPMOST : WinApi.HWND_NOTOPMOST),
                 rect.left, rect.top,
                 (rect.right - rect.left), (rect.bottom - rect.top),
-                WinApi.SWP_ASYNCWINDOWPOS | WinApi.SWP_FRAMECHANGED | WinApi.SWP_NOCOPYBITS | WinApi.SWP_NOACTIVATE
+                WinApi.SWP_ASYNCWINDOWPOS | WinApi.SWP_FRAMECHANGED | WinApi.SWP_NOCOPYBITS | WinApi.SWP_NOACTIVATE | WinApi.SWP_SHOWWINDOW
                 );
         }
 
@@ -210,9 +245,19 @@ namespace InvisibleByAero
             WindowItem item = (WindowItem)comboBoxWindowClass.SelectedItem;
             if (item == null) return;
 
+            if (checkBoxTransparent.Checked && !item.Transparent)
+            {
+                checkBoxColorKey.Checked = false;
+            } else if (checkBoxColorKey.Checked && !item.ColorKey)
+            {
+                checkBoxTransparent.Checked = false;
+            }
+
             item.Transparent = checkBoxTransparent.Checked;
+            item.ColorKey = checkBoxColorKey.Checked;
             item.Topmost = checkBoxTopmost.Checked;
             item.Clickthrough = checkBoxClickThrough.Checked;
+            item.KeyColor = buttonKeyColor.BackColor;
 
             UpdateWindow(item);
         }
@@ -245,6 +290,22 @@ namespace InvisibleByAero
         private void checkBoxClickThrough_Click(object sender, EventArgs e)
         {
             ApplyStyle();
+        }
+
+        private void checkBoxColorKey_Click(object sender, EventArgs e)
+        {
+            ApplyStyle();
+        }
+
+        private void buttonKeyColor_Click(object sender, EventArgs e)
+        {
+            colorDialogForTransparent.Color = buttonKeyColor.BackColor;
+            if (colorDialogForTransparent.ShowDialog(this) == DialogResult.OK)
+            {
+                buttonKeyColor.BackColor = colorDialogForTransparent.Color;
+                ApplyStyle();
+            }
+
         }
     }
 }
