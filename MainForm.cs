@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Kirurobo;
 
 namespace InvisibleByAero
 {
@@ -90,7 +91,7 @@ namespace InvisibleByAero
                     StringBuilder sb = new StringBuilder(1024);
                     if (WinApi.IsWindowVisible(hWnd) != 0 && WinApi.GetWindowText(hWnd, sb, sb.Capacity) != 0)
                     {
-                        WinApi.GetWindowThreadProcessId(hWnd, out long pid);
+                        WinApi.GetWindowThreadProcessId(hWnd, out int pid);
                         Process p = Process.GetProcessById((int)pid);
 
                         comboBoxWindowClass.Items.Add(new WindowItem(hWnd, p, sb.ToString()));
