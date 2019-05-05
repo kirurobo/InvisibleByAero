@@ -20,6 +20,8 @@ namespace InvisibleByAero
         private const string DEFAULT_WINDOWNAME = "MikuMikuDance";
         private const string DEFAULT_WINDOWTITLE = "MMD";
 
+        private bool IncludeChildren = false;
+
         private Dictionary<IntPtr, WindowItem> windowList = new Dictionary<IntPtr, WindowItem>();
 
         /// <summary>
@@ -62,8 +64,8 @@ namespace InvisibleByAero
 
             override public string ToString()
             {
-                if (string.IsNullOrEmpty(Text)) return ProcessName + " : " + Handle;
-                else return ProcessName + " - " + Text + " : " + Handle;
+                if (string.IsNullOrEmpty(Text)) return $"{Handle.ToString("X8")} {ProcessName}";
+                else return $"{Handle.ToString("X8")} {ProcessName}-{Text}";
             }
         }
 
@@ -108,26 +110,29 @@ namespace InvisibleByAero
                         }
                     }
 
-                    //// 子ウィンドウも一覧に含めるならコメントを外す
-                    //WinApi.EnumChildWindows(hWnd, new WinApi.EnumWindowsDelegate(delegate (IntPtr hWndChild, long lParamChild)
-                    //{
-                    //    if (windowList.ContainsKey(hWndChild)) return true;
+                    if (IncludeChildren)
+                    {
+                        // 子ウィンドウも一覧に含める
+                        WinApi.EnumChildWindows(hWnd, new WinApi.EnumWindowsDelegate(delegate (IntPtr hWndChild, long lParamChild)
+                        {
+                            if (windowList.ContainsKey(hWndChild)) return true;
 
-                    //    StringBuilder sbChild = new StringBuilder(1024);
-                    //    if (WinApi.IsWindowVisible(hWndChild) != 0 && WinApi.GetWindowText(hWndChild, sbChild, sbChild.Capacity) != 0)
-                    //    {
-                    //        WinApi.GetWindowThreadProcessId(hWndChild, out int pid);
-                    //        Process p = Process.GetProcessById((int)pid);
+                            StringBuilder sbChild = new StringBuilder(1024);
+                            if (WinApi.IsWindowVisible(hWndChild) != 0 && WinApi.GetWindowText(hWndChild, sbChild, sbChild.Capacity) != 0)
+                            {
+                                WinApi.GetWindowThreadProcessId(hWndChild, out int pid);
+                                Process p = Process.GetProcessById((int)pid);
 
-                    //        comboBoxWindowClass.Items.Add(new WindowItem(hWndChild, p, sbChild.ToString(), true));
-                    //        if (p.ProcessName == DEFAULT_WINDOWNAME && sbChild.ToString() == DEFAULT_WINDOWTITLE)
-                    //        {
-                    //            comboBoxWindowClass.SelectedIndex = comboBoxWindowClass.Items.Count - 1;
-                    //        }
-                    //    }
+                                comboBoxWindowClass.Items.Add(new WindowItem(hWndChild, p, sbChild.ToString(), true));
+                                if (p.ProcessName == DEFAULT_WINDOWNAME && sbChild.ToString() == DEFAULT_WINDOWTITLE)
+                                {
+                                    comboBoxWindowClass.SelectedIndex = comboBoxWindowClass.Items.Count - 1;
+                                }
+                            }
 
-                    //    return true;
-                    //}), 0);
+                            return true;
+                        }), 0);
+                    }
 
                     return true;
                 }), 0);
@@ -307,6 +312,18 @@ namespace InvisibleByAero
         /// <param name="e"></param>
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
+            IncludeChildren = false;
+            GetWindowClasses();
+        }
+
+        /// <summary>
+        /// 子を含めて対象ウィンドウ更新ボタンが押されたときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonRefreshWithChildren_Click(object sender, EventArgs e)
+        {
+            IncludeChildren = true;
             GetWindowClasses();
         }
 
