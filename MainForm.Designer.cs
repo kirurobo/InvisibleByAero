@@ -46,6 +46,7 @@
             this.radioButtonDefault = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBoxBorder = new System.Windows.Forms.CheckBox();
+            this.textBoxDebug = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOpacity)).BeginInit();
             this.SuspendLayout();
             // 
@@ -242,11 +243,23 @@
             this.checkBoxBorder.UseVisualStyleBackColor = true;
             this.checkBoxBorder.CheckedChanged += new System.EventHandler(this.control_Click);
             // 
+            // textBoxDebug
+            // 
+            this.textBoxDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDebug.Location = new System.Drawing.Point(11, 319);
+            this.textBoxDebug.Multiline = true;
+            this.textBoxDebug.Name = "textBoxDebug";
+            this.textBoxDebug.Size = new System.Drawing.Size(373, 236);
+            this.textBoxDebug.TabIndex = 9;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(398, 316);
+            this.ClientSize = new System.Drawing.Size(398, 567);
+            this.Controls.Add(this.textBoxDebug);
             this.Controls.Add(this.radioButtonDefault);
             this.Controls.Add(this.radioButtonChromakey);
             this.Controls.Add(this.radioButtonDwm);
@@ -293,6 +306,7 @@
         private System.Windows.Forms.RadioButton radioButtonDefault;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkBoxBorder;
+        private System.Windows.Forms.TextBox textBoxDebug;
     }
 }
 
