@@ -34,8 +34,8 @@ namespace InvisibleByAero
             public string ProcessName;
             public bool IsChild;
 
-            public long OriginalStyles;     // 元のウィンドウスタイル
-            public long OriginalExStyles;   // 元の拡張ウィンドウスタイル
+            public ulong OriginalStyles;     // 元のウィンドウスタイル
+            public ulong OriginalExStyles;   // 元の拡張ウィンドウスタイル
             public bool Transparent;    // 透過中ならtrue
             public bool ColorKey;        // UpdateLayeredWindowの透過色指定ならtrue
             public bool HasAlpha;       // 全体の不透明度を指定するならtrue
@@ -60,8 +60,8 @@ namespace InvisibleByAero
                 this.KeyColor = Color.Black;
 
                 // ウィンドウ状態を読み込み＆記憶
-                long ws = WinApi.GetWindowLong(hWnd, WinApi.GWL_STYLE);
-                long wsex = WinApi.GetWindowLong(hWnd, WinApi.GWL_EXSTYLE);
+                ulong ws = WinApi.GetWindowLong(hWnd, WinApi.GWL_STYLE);
+                ulong wsex = WinApi.GetWindowLong(hWnd, WinApi.GWL_EXSTYLE);
 
                 //this.DwmAttributes = GetDwmAttributes();
 
@@ -160,7 +160,7 @@ namespace InvisibleByAero
         {
             comboBoxWindowClass.Items.Clear();
             
-            WinApi.EnumWindows(new WinApi.EnumWindowsDelegate(delegate (IntPtr hWnd, long lParam)
+            WinApi.EnumWindows(new WinApi.EnumWindowsDelegate(delegate (IntPtr hWnd, IntPtr lParam)
                 {
                     if (windowList.ContainsKey(hWnd)) return true;
 
@@ -172,7 +172,7 @@ namespace InvisibleByAero
                     WinApi.GetWindowText(hWnd, sb, sb.Capacity);
                     if (WinApi.IsWindowVisible(hWnd))
                     {
-                        WinApi.GetWindowThreadProcessId(hWnd, out long pid);
+                        WinApi.GetWindowThreadProcessId(hWnd, out ulong pid);
                         Process p = Process.GetProcessById((int)pid);
 
                         comboBoxWindowClass.Items.Add(new WindowItem(hWnd, p, sb.ToString()));
@@ -185,14 +185,14 @@ namespace InvisibleByAero
                     if (IncludeChildren)
                     {
                         // 子ウィンドウも一覧に含める
-                        WinApi.EnumChildWindows(hWnd, new WinApi.EnumWindowsDelegate(delegate (IntPtr hWndChild, long lParamChild)
+                        WinApi.EnumChildWindows(hWnd, new WinApi.EnumWindowsDelegate(delegate (IntPtr hWndChild, IntPtr lParamChild)
                         {
                             if (windowList.ContainsKey(hWndChild)) return true;
 
                             StringBuilder sbChild = new StringBuilder(1024);
                             if (WinApi.IsWindowVisible(hWndChild) && WinApi.GetWindowText(hWndChild, sbChild, sbChild.Capacity) != 0)
                             {
-                                WinApi.GetWindowThreadProcessId(hWndChild, out long pid);
+                                WinApi.GetWindowThreadProcessId(hWndChild, out ulong pid);
                                 Process p = Process.GetProcessById((int)pid);
 
                                 comboBoxWindowClass.Items.Add(new WindowItem(hWndChild, p, sbChild.ToString(), true));
@@ -295,8 +295,8 @@ namespace InvisibleByAero
         /// <param name="item"></param>
         private void UpdateWindow(WindowItem item)
         {
-            long ws;
-            long wsex;
+            ulong ws;
+            ulong wsex;
 
             IntPtr hWnd = item.Handle;
             if (!WinApi.IsWindow(hWnd))
