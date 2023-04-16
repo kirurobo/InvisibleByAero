@@ -273,6 +273,22 @@ namespace InvisibleByAero
             UpdateWindow(item);
         }
 
+        private void SetWallpaper()
+        {
+            WindowItem item = (WindowItem)comboBoxWindowClass.SelectedItem;
+            if (item == null) return;
+
+            var topHWnd = WinApi.FindWindow("WorkerW", IntPtr.Zero);
+            if (topHWnd == IntPtr.Zero)
+            {
+                topHWnd = WinApi.FindWindow(IntPtr.Zero, "Program Manager");
+                if (topHWnd == IntPtr.Zero) return;
+            }
+
+            var ret = WinApi.SetParent(item.Handle, topHWnd);
+            Console.WriteLine(ret);
+        }
+
         /// <summary>
         /// ウィンドウを再描画させる
         /// </summary>
@@ -474,6 +490,11 @@ namespace InvisibleByAero
                 ApplyStyle();
             }
 
+        }
+
+        private void buttonDesktop_Click(object sender, EventArgs e)
+        {
+            SetWallpaper();
         }
     }
 }

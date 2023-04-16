@@ -47,6 +47,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.checkBoxBorder = new System.Windows.Forms.CheckBox();
             this.textBoxDebug = new System.Windows.Forms.TextBox();
+            this.buttonDesktop = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOpacity)).BeginInit();
             this.SuspendLayout();
             // 
@@ -254,6 +255,16 @@
             this.textBoxDebug.Size = new System.Drawing.Size(373, 236);
             this.textBoxDebug.TabIndex = 9;
             // 
+            // buttonDesktop
+            // 
+            this.buttonDesktop.Location = new System.Drawing.Point(270, 178);
+            this.buttonDesktop.Name = "buttonDesktop";
+            this.buttonDesktop.Size = new System.Drawing.Size(100, 25);
+            this.buttonDesktop.TabIndex = 3;
+            this.buttonDesktop.Text = "デスクトップ";
+            this.buttonDesktop.UseVisualStyleBackColor = true;
+            this.buttonDesktop.Click += new System.EventHandler(this.buttonDesktop_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -271,6 +282,7 @@
             this.Controls.Add(this.checkBoxTopmost);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.buttonRefreshWithChildren);
+            this.Controls.Add(this.buttonDesktop);
             this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.buttonNoAeroBorder);
             this.Controls.Add(this.label4);
@@ -307,6 +319,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkBoxBorder;
         private System.Windows.Forms.TextBox textBoxDebug;
+        private System.Windows.Forms.Button buttonDesktop;
     }
 }
 
